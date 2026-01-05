@@ -2,13 +2,36 @@
 
 namespace Molitor\Tree;
 
-class TreeItem extends Tree
+class Node extends Tree
 {
+    private string $id = '';
+    private Tree|null $parent = null;
     private null|array $data = null;
+
+    public function getId(): string
+    {
+        return $this->id;
+    }
+
+    public function setId(string $id): void
+    {
+        $this->id = $id;
+    }
 
     public function __construct(array $data = null)
     {
         $this->setData($data);
+    }
+
+    public function setParent(Tree $parent): static
+    {
+        $this->parent = $parent;
+        return $this;
+    }
+
+    public function getParent(): ?Tree
+    {
+        return $this->parent;
     }
 
     public function setData(array $data): static

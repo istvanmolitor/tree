@@ -4,21 +4,28 @@ namespace Molitor\Tree;
 
 class Tree
 {
-    private array $items = [];
+    private array $nodes = [];
 
-    public function addItem(TreeItem $item): static
+    public function createNode(string $name): Node
     {
-        $this->items[] = $item;
-        return $this;
+        $node = new Node();
+        $node->setParent($this);
+        $this->nodes[$name] = $node;
+        return $node;
     }
 
-    public function getItems(): array
+    public function getNode(string $name): ?Node
     {
-        return $this->items;
+        return $this->nodes[$name] ?? null;
+    }
+
+    public function getNodes(): array
+    {
+        return $this->nodes;
     }
 
     public function toArray(): array
     {
-        return array_map(fn(TreeItem $item) => $item->toArray(), $this->items);
+        return array_map(fn(Node $item) => $item->toArray(), $this->nodes);
     }
 }

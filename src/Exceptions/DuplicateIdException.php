@@ -6,15 +6,15 @@ use Exception;
 
 class DuplicateIdException extends Exception
 {
-    protected int $id;
+    protected string|int $id;
 
-    public function __construct(int $id)
+    public function __construct(string|int $id)
     {
         $this->id = $id;
         parent::__construct("ID {$id} already exists in the tree.");
     }
 
-    public function getId(): int
+    public function getId(): string|int
     {
         return $this->id;
     }
