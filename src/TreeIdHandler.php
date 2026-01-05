@@ -14,8 +14,6 @@ class TreeIdHandler
 
     private $parents = [];
 
-
-
     public function idExists(string|int $id): bool
     {
         return array_key_exists($id, $this->data);
@@ -86,5 +84,10 @@ class TreeIdHandler
     public function getPath(string|int $id): array
     {
         return array_map(fn($id) => $this->getData($id), $this->getPathIds($id));
+    }
+
+    public function getIds(): array
+    {
+        return array_keys($this->data);
     }
 }
