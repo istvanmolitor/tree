@@ -4,7 +4,6 @@ namespace Molitor\Tree;
 
 class Node extends Tree
 {
-    private string $id = '';
     private Tree|null $parent = null;
     private null|array $data = null;
 

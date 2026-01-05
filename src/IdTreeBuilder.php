@@ -4,7 +4,7 @@ namespace Molitor\Tree;
 
 use Molitor\Tree\Exceptions\DuplicateIdException;
 
-class TreeIdHandler
+class IdTreeBuilder
 {
     private $data = [];
 
@@ -89,5 +89,23 @@ class TreeIdHandler
     public function getIds(): array
     {
         return array_keys($this->data);
+    }
+
+    protected function buildNode(string|int $id): Node
+    {
+        $node = new Node($this->getData($id));
+        foreach ($this->getChildrenIds($id) as $childrenId) {
+            $node->addChild($this->buildNode($childrenId));
+        }
+        return $node;
+    }
+
+    public function buildTree(): Tree
+    {
+        $tree = new Tree();
+        foreach ($this->getChildrenIds(null) as $id) {
+            $tree->addChild($this->buildNode($id));
+        }
+        return $tree;
     }
 }

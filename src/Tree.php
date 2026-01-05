@@ -6,17 +6,11 @@ class Tree
 {
     private array $nodes = [];
 
-    public function createNode(string $name): Node
+    public function addChild(Node $node): static
     {
-        $node = new Node();
         $node->setParent($this);
-        $this->nodes[$name] = $node;
-        return $node;
-    }
-
-    public function getNode(string $name): ?Node
-    {
-        return $this->nodes[$name] ?? null;
+        $this->nodes[] = $node;
+        return $this;
     }
 
     public function getNodes(): array
