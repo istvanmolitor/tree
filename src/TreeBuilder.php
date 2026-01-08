@@ -4,7 +4,7 @@ namespace Molitor\Tree;
 
 use Molitor\Tree\Exceptions\DuplicateIdException;
 
-class IdTreeBuilder
+class TreeBuilder
 {
     private $data = [];
 
@@ -13,6 +13,9 @@ class IdTreeBuilder
     private $children = [];
 
     private $parents = [];
+
+    private string $slugSeparator = "/";
+    private array $slugs = [];
 
     public function idExists(string|int $id): bool
     {
@@ -60,6 +63,56 @@ class IdTreeBuilder
             }
             else {
                 $this->children[$parentId] = [$id];
+            }
+        }
+    }
+
+    protected function prepareSlug(string $slug, string $separator): array
+    {
+        if(empty($slug)) {
+            return [];
+        }
+        return array_map(fn($part) => trim($part), explode($separator, $slug));
+    }
+
+    public function getIdBySlug(string $slug, string $separator = '/'): ?string
+    {
+        $slugParts = $this->prepareSlug($slug, $separator);
+        if(count($slugParts) === 0) {
+            return null;
+        }
+        return md5(serialize($slugParts));
+    }
+
+    public function getParentIdBySlug(string $slug, string $separator = '/'): ?string
+    {
+        $slugParts = $this->prepareSlug($slug, $separator);
+        if(count($slugParts) === 0) {
+            return null;
+        }
+        array_pop($slugParts);
+        if(count($slugParts) === 0) {
+            return null;
+        }
+        return md5(serialize($slugParts));
+    }
+
+
+    public function addBySlug(string $slug, array $data = [], string $separator = '/'): void
+    {
+        $slugElements = $this->prepareSlug($slug, $separator);
+        if(count($slugElements) === 0) {
+            return;
+        }
+
+        $parentId = null;
+        $currentSlugParts = [];
+        foreach ($slugElements as $slugElement) {
+            $currentSlugParts[] = $slugElement;
+            $id = md5(serialize($currentSlugParts));
+            if(!$this->idExists($id)) {
+                $this->add($id, [], $parentId);
+                $parentId = $id;
             }
         }
     }
