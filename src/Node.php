@@ -33,6 +33,11 @@ class Node extends Tree
         return $this->parent;
     }
 
+    public function hasParent(): bool
+    {
+        return $this->parent !== null;
+    }
+
     public function setData(array $data): static
     {
         $this->data = $data;
@@ -73,6 +78,17 @@ class Node extends Tree
     public function __get(string $key): mixed
     {
         return $this->get($key);
+    }
+
+    public function getPath(): array
+    {
+        $current = $this;
+        $path = [$this];
+        while ($current->hasParent()) {
+            $current = $current->getParent();
+            $path[] = $current;
+        }
+        return $path;
     }
 
     public function toArray(): array
